@@ -1,11 +1,20 @@
 
 
-function getRandom(problems)
+function getRandom(problems,from,to)
 {
     if (!Array.isArray(problems) || problems.length === 0) {
         throw new Error("No problems available.");
       }
-    const random_index=Math.floor(Math.random()*problems.length);
+      var random_index;
+      while(1)
+      {
+        random_index=Math.floor(Math.random()*problems.length);
+        const rating=problems[random_index].rating;
+        if(rating>=from && rating<=to)
+        {
+            break;
+        }
+      }
     return problems[random_index];
 }
 
@@ -16,7 +25,12 @@ async function handleButtonClick()
         const api=  await  fetch("https://codeforces.com/api/problemset.problems");
         const data= await api.json();
         const problems=data.result.problems;
-        const random_problem=getRandom(problems);
+        const from=document.getElementById('from').value;
+        const to=document.getElementById('to').value;
+        console.log(from);
+        console.log(to);
+        const random_problem=getRandom(problems,from,to);
+        // const random_problem=problems[0];
         const id=random_problem.contestId;
         const index=random_problem.index;
         const area=document.getElementById('area');
